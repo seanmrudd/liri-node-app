@@ -10,23 +10,21 @@ var spotify = new Spotify(keys.spotify);
 
 var moment = require('moment');
 
-moment().format();
-
 // This works -- don't touch
-// spotify
-//     .request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx')
-//     .then(function (data) {
-//         console.log(Object.keys(data));
-//     })
-//     .catch(function (err) {
-//         console.error('Error occurred: ' + err);
-//     });
+spotify
+    .request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx')
+    .then(function (data) {
+        console.log(Object.keys(data));
+    })
+    .catch(function (err) {
+        console.error('Error occurred: ' + err);
+    });
 
-// axios
-//     .get(`https://rest.bandsintown.com/artists/taylor+swift/events?app_id=codingbootcamp`)
-//     .then(function (response) {
-//         console.log(response.data);
-//     })
+axios
+    .get(`https://rest.bandsintown.com/artists/taylor+swift/events?app_id=codingbootcamp`)
+    .then(function (response) {
+        console.log(`Name of the Venue: ${response.data[0].venue.name}\nVenue Location: ${response.data[0].venue.city}, ${response.data[0].venue.region}\nDate of the Event: ${moment(response.data[0].datetime).format("dddd, MMMM Do YYYY, h:mm:ss a")}`);
+    })
 
 var nodeArgs = process.argv;
 
