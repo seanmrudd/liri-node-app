@@ -10,42 +10,44 @@ var spotify = new Spotify(keys.spotify);
 
 var moment = require('moment');
 
-// This works -- don't touch
-spotify
-    .request('https://api.spotify.com/v1/tracks/7yCPwWs66K8Ba5lFuU2bcx')
-    .then(function (data) {
-        console.log(Object.keys(data));
-    })
-    .catch(function (err) {
-        console.error('Error occurred: ' + err);
-    });
-
-axios
-    .get(`https://rest.bandsintown.com/artists/taylor+swift/events?app_id=codingbootcamp`)
-    .then(function (response) {
-        console.log(`Name of the Venue: ${response.data[0].venue.name}\nVenue Location: ${response.data[0].venue.city}, ${response.data[0].venue.region}\nDate of the Event: ${moment(response.data[0].datetime).format("dddd, MMMM Do YYYY, h:mm:ss a")}`);
-    })
-
-var nodeArgs = process.argv;
-
-var movieName = "";
-
-for (var i = 2; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
-        movieName = movieName + "+" + nodeArgs[i];
-    } else {
-        movieName += nodeArgs[i];
+//Spotify
+   
+  spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
     }
-}
+   
+  console.log(data.tracks.items); 
+  });
 
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+// Bands-In-Town
+// axios
+//     .get(`https://rest.bandsintown.com/artists/taylor+swift/events?app_id=codingbootcamp`)
+//     .then(function (response) {
+//         console.log(`Name of the Venue: ${response.data[0].venue.name}\nVenue Location: ${response.data[0].venue.city}, ${response.data[0].venue.region}\nDate of the Event: ${moment(response.data[0].datetime).format("dddd, MMMM Do YYYY, h:mm:ss a")}`);
+//     })
 
-axios.get(queryUrl).then(
-    function (response) {
-        console.log(`\n**********\nTitle of the Movie: ${JSON.stringify(response.data.Title)}\nYear movie came out: ${response.data.Year}\nIMDB Rating: ${response.data.Ratings[0].Value}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry where it was produced: ${response.data.Country}\nLanguage(s) movie is made in:${response.data.Language}\n\n Plot: ${response.data.Plot}\n\n Actors in the movie: ${response.data.Actors}\n**********\n`);
-    })
-    .catch(function (error) {
-        if (error.response) {
-            console.log(error.response);
-        }
-    });
+// OMDB
+// var nodeArgs = process.argv;
+
+// var movieName = "";
+
+// for (var i = 2; i < nodeArgs.length; i++) {
+//     if (i > 2 && i < nodeArgs.length) {
+//         movieName = movieName + "+" + nodeArgs[i];
+//     } else {
+//         movieName += nodeArgs[i];
+//     }
+// }
+
+// var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+
+// axios.get(queryUrl).then(
+//     function (response) {
+//         console.log(`\n**********\nTitle of the Movie: ${response.data.Title}\nYear movie came out: ${response.data.Year}\nIMDB Rating: ${response.data.Ratings[0].Value}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry where it was produced: ${response.data.Country}\nLanguage(s) movie is made in:${response.data.Language}\n\n Plot: ${response.data.Plot}\n\n Actors in the movie: ${response.data.Actors}\n**********\n`);
+//     })
+//     .catch(function (error) {
+//         if (error.response) {
+//             console.log(error.response);
+//         }
+//     });
