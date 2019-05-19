@@ -16,17 +16,34 @@ var fs = require('fs');
 //Spotify
 function liriSpotify() {
 
-  spotify.search({ type: 'track', query: liriSearch, limit: 1 }, function (err, data) {
-    if (err) {
-      return console.log('Error occurred: ' + err);
-    }
-    console.log('\n-----------------------');
-    console.log(`Artist/Band Name: ${data.tracks.items[0].artists[0].name}`);
-    console.log(`Song Name: ${data.tracks.items[0].name}`);
-    console.log(`URL: ${data.tracks.items[0].external_urls.spotify}`);
-    console.log(`Album Name: ${data.tracks.items[0].album.name}`);
-    console.log('-----------------------');
-  });
+  if (liriSearch === '') {
+
+    spotify
+      .request('https://api.spotify.com/v1/tracks/0hrBpAOgrt8RXigk83LLNE')
+      .then(function (data) {
+        console.log('\n-----------------------');
+        console.log(`Artist/Band Name: ${data.album.artists[0].name}`);
+        console.log(`Song Name: ${data.name}`);
+        console.log(`URL: ${data.album.artists[0].external_urls.spotify}`);
+        console.log(`Album Name: ${data.album.name}`);
+        console.log('-----------------------');
+      })
+      .catch(function (err) {
+        console.error('Error occurred: ' + err);
+      });
+  } else
+
+    spotify.search({ type: 'track', query: liriSearch, limit: 1}, function (err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
+      }
+      console.log('\n-----------------------');
+      console.log(`Artist/Band Name: ${data.tracks.items[0].artists[0].name}`);
+      console.log(`Song Name: ${data.tracks.items[0].name}`);
+      console.log(`URL: ${data.tracks.items[0].external_urls.spotify}`);
+      console.log(`Album Name: ${data.tracks.items[0].album.name}`);
+      console.log('-----------------------');
+    });
 }
 
 // Bands-In-Town
@@ -46,7 +63,7 @@ function liriConcert() {
 // OMDB
 function liriMovie() {
 
-  if (liriSearch === ''){
+  if (liriSearch === '') {
     liriSearch = 'Mr. Nobody';
   }
 
@@ -56,8 +73,10 @@ function liriMovie() {
     .then(
       function (response) {
         console.log(`\n**********\nTitle of the Movie: ${response.data.Title}\nYear movie came out: ${response.data.Year}\nIMDB Rating: ${response.data.Ratings[0].Value}\nRotten Tomatoes Rating: ${response.data.Ratings[1].Value}\nCountry where it was produced: ${response.data.Country}\nLanguage(s) movie is made in:${response.data.Language}\n\n Plot: ${response.data.Plot}\n\n Actors in the movie: ${response.data.Actors}\n**********\n`);
-        console.log("If you haven't watched 'Mr. Nobody', then you should: <http://www.imdb.com/title/tt0485947/>")
-        console.log("It's on Netflix!")
+        if (liriSearch === 'Mr. Nobody') {
+          console.log("If you haven't watched 'Mr. Nobody', then you should: <http://www.imdb.com/title/tt0485947/>")
+          console.log("It's on Netflix!")
+        }
       })
     .catch(function (error) {
       if (error.response) {
@@ -82,9 +101,13 @@ function liriDoThis() {
     } else if (liriBot === 'concert-this') {
       liriConcert(liriSearch);
     } else if (liriBot === 'movie-this') {
-      liriMovie (liriSearch);
+      liriMovie(liriSearch);
     }
   })
+}
+
+function liriInstructions () {
+  console.log("\nAfter you type in 'node liri.js' you can enter: \n\n<spotify-this-song> to search for a song, \n<concert-this> to search for a concert, or \n<movie-this> to search for a movie.  \n\nAfter the command, enter in what you want to search.")
 }
 
 //Liri function selector
@@ -107,7 +130,6 @@ switch (liriBot) {
   case 'do-what-it-says':
     liriDoThis();
     break;
-  case '':
+  default:
     liriInstructions();
-    break;
 }
